@@ -1,39 +1,6 @@
-import { useState, useEffect } from 'react'
-import blogService from '../services/blogs'
 import Blog from '../components/Blog'
 
-const BlogForm = () => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-  const [blogs, setBlogs] = useState([])
-
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    const newObject = {
-      title: title,
-      author: author,
-      url: url
-    }
-    try {
-      await blogService.create(newObject)
-    } catch (error) {
-      console.log(error);
-    }
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
-  }
-
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
-  }, [])
-
+const BlogForm = ({ handleSubmit, setTitle, setAuthor, setUrl, author, title, url, blogs }) => {
   return (
     <>
       <h2>Create new</h2>
