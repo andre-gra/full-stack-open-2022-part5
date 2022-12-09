@@ -1,7 +1,9 @@
 import { useState } from "react"
+import blogService from '../services/blogs'
 
 const Blog = ({ blog }) => {
   const [hide, setHide] = useState(true)
+  const [blogIstance, setblogIstance] = useState(blog)
 
   const show = { display: hide ? 'none' : '' }
 
@@ -19,14 +21,27 @@ const Blog = ({ blog }) => {
     marginBottom: 5,
   }
 
+  const addLike = async () => {
+    const newObject = {
+      ...blogIstance,
+      likes: blogIstance.likes + 1
+    }
+    try {
+      await blogService.update(newObject)
+    } catch (error) {
+      console.log(error);
+    }
+    setblogIstance(newObject)
+  }
+
   return (
     <div style={blogStyle}>
-      {blog.title} {blog.author}
+      {blogIstance.title} {blogIstance.author}
       <button onClick={toggleVisibility}>{buttonVisibilityText}</button> 
         <div style={show}>
-          <div>{blog.url}</div>
-          <div>likes: {blog.likes} <button>like</button></div>
-          <div>{blog.user.username}</div>
+          <div>{blogIstance.url}</div>
+          <div>likes: {blogIstance.likes} <button onClick={addLike}>like</button></div>
+          <div>{blogIstance.user.username}</div>
         </div>
     </div>
   )
