@@ -4,6 +4,8 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import ErrorNotification from './components/ErrorNotification'
+import Toggable from './components/Toggable'
+import Blog from './components/Blog'
 
 const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
@@ -128,16 +130,21 @@ const App = () => {
         loginForm() :
         <div>
           <p><span>{user.name} logged-in</span><button onClick={handleLogout}>logout</button></p>
-          <BlogForm
-            handleSubmit={handleSubmit}
-            author={author}
-            title={title}
-            url={url}
-            setAuthor={setAuthor}
-            setTitle={setTitle}
-            setUrl={setUrl}
-            blogs={blogs}
-          />
+          <Toggable buttonLabel = 'new Blog'>
+            <BlogForm
+              handleSubmit={handleSubmit}
+              author={author}
+              title={title}
+              url={url}
+              setAuthor={setAuthor}
+              setTitle={setTitle}
+              setUrl={setUrl}
+              blogs={blogs}
+            />
+          </Toggable>
+          {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} />
+          )}
         </div>
       }
 
