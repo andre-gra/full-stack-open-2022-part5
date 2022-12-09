@@ -34,15 +34,28 @@ const Blog = ({ blog }) => {
     setblogIstance(newObject)
   }
 
+  const deleteBlog = async () => {
+    if (window.confirm(`Remove blog ${blogIstance.title} by ${blogIstance.author}`)) {
+      try {
+        await blogService.deleteBlog(blogIstance.id)
+      } catch(error) {
+        console.log(error)
+      }
+    }
+  }
+
+  const loggedBlogappUser = JSON.parse(localStorage.getItem('loggedBlogappUser'))
+
   return (
     <div style={blogStyle}>
       {blogIstance.title} {blogIstance.author}
-      <button onClick={toggleVisibility}>{buttonVisibilityText}</button> 
-        <div style={show}>
-          <div>{blogIstance.url}</div>
-          <div>likes: {blogIstance.likes} <button onClick={addLike}>like</button></div>
-          <div>{blogIstance.user.username}</div>
-        </div>
+      <button onClick={toggleVisibility}>{buttonVisibilityText}</button>
+      <div style={show}>
+        <div>{blogIstance.url}</div>
+        <div>likes: {blogIstance.likes} <button onClick={addLike}>like</button></div>
+        <div>{blogIstance.user.username}</div>
+        {(loggedBlogappUser.username === blogIstance.user.username) && <button onClick={deleteBlog}>Remove</button>}
+      </div>
     </div>
   )
 }
