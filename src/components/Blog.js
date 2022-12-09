@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 import blogService from '../services/blogs'
 
 const Blog = ({ blog }) => {
@@ -29,7 +29,7 @@ const Blog = ({ blog }) => {
     try {
       await blogService.update(newObject)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
     setblogIstance(newObject)
   }

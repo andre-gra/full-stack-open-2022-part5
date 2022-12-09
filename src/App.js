@@ -75,7 +75,7 @@ const App = () => {
         setMessage(null)
       }, 5000)
     } catch (error) {
-      console.log(error);
+      console.log(error)
       setErrorMessage('Something went wrong. Retry!')
       setTimeout(() => {
         setErrorMessage(null)
