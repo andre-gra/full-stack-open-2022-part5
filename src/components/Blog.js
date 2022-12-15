@@ -44,17 +44,20 @@ const Blog = ({ blog }) => {
     }
   }
 
-  const loggedBlogappUser = JSON.parse(localStorage.getItem('loggedBlogappUser'))
+  const loggedBlogappUser = ''
+  blog.loggedBlogappUser !== undefined ? blog.loggedBlogappUser.username : JSON.parse(localStorage.getItem('loggedBlogappUser'))
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       {blogIstance.title} {blogIstance.author}
       <button onClick={toggleVisibility}>{buttonVisibilityText}</button>
-      <div style={show}>
+      <div style={show} data-testid='toggableContent'>
         <div>{blogIstance.url}</div>
         <div>likes: {blogIstance.likes} <button onClick={addLike}>like</button></div>
         <div>{blogIstance.user.username}</div>
-        {(loggedBlogappUser.username === blogIstance.user.username) && <button onClick={deleteBlog}>Remove</button>}
+        {(loggedBlogappUser.username === blogIstance.user.username) &&
+        <button onClick={deleteBlog}>Remove</button>
+        }
       </div>
     </div>
   )
