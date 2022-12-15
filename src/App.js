@@ -154,7 +154,6 @@ const App = () => {
               setAuthor={setAuthor}
               setTitle={setTitle}
               setUrl={setUrl}
-              blogs={blogs}
             />
           </Toggable>
           {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
