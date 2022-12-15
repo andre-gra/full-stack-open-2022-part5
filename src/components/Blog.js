@@ -1,10 +1,8 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, addLike }) => {
   const [hide, setHide] = useState(true)
-  const [blogIstance, setblogIstance] = useState(blog)
-
   const show = { display: hide ? 'none' : '' }
 
   const buttonVisibilityText = hide ? 'view' : 'hide'
@@ -21,23 +19,10 @@ const Blog = ({ blog }) => {
     marginBottom: 5,
   }
 
-  const addLike = async () => {
-    const newObject = {
-      ...blogIstance,
-      likes: blogIstance.likes + 1
-    }
-    try {
-      await blogService.update(newObject)
-    } catch (error) {
-      console.log(error)
-    }
-    setblogIstance(newObject)
-  }
-
   const deleteBlog = async () => {
-    if (window.confirm(`Remove blog ${blogIstance.title} by ${blogIstance.author}`)) {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
       try {
-        await blogService.deleteBlog(blogIstance.id)
+        await blogService.deleteBlog(blog.id)
       } catch(error) {
         console.log(error)
       }
@@ -49,13 +34,13 @@ const Blog = ({ blog }) => {
 
   return (
     <div style={blogStyle} className='blog'>
-      {blogIstance.title} {blogIstance.author}
+      {blog.title} {blog.author}
       <button onClick={toggleVisibility}>{buttonVisibilityText}</button>
       <div style={show} data-testid='toggableContent'>
-        <div>{blogIstance.url}</div>
-        <div>likes: {blogIstance.likes} <button onClick={addLike}>like</button></div>
-        <div>{blogIstance.user.username}</div>
-        {(loggedBlogappUser.username === blogIstance.user.username) &&
+        <div>{blog.url}</div>
+        <div>likes: {blog.likes} <button onClick={addLike} data-testid="like-button">like</button></div>
+        <div>{blog.user.username}</div>
+        {(loggedBlogappUser.username === blog.user.username) &&
         <button onClick={deleteBlog}>Remove</button>
         }
       </div>

@@ -95,6 +95,21 @@ const App = () => {
     )
   }, [])
 
+  const addLike = async (blog) => {
+    const newObject = {
+      ...blog,
+      likes: blog.likes + 1
+    }
+    try {
+      await blogService.update(newObject)
+    } catch (error) {
+      console.log(error)
+    }
+    blogService.getAll().then(blogs =>
+      setBlogs(blogs)
+    )
+  }
+
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
@@ -143,7 +158,7 @@ const App = () => {
             />
           </Toggable>
           {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} addLike={() => addLike(blog)} />
           )}
         </div>
       }
