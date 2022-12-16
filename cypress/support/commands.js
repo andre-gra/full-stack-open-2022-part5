@@ -29,3 +29,10 @@ Cypress.Commands.add('createUser', ({ username, password, name }) => {
     username, name, password
   })
 })
+
+
+Cypress.Commands.add('login', () => {
+  cy.get('#username').type('admin')
+  cy.get('#password').type('admin')
+  cy.get('#login-button').click()
+})

@@ -11,7 +11,7 @@ describe('Blog app', function () {
 
 
   it('succeeds with correct credentials', function () {
-    cy.contains('login')
+    cy.contains('login').click()
     cy.get('#username').type('admin')
     cy.get('#password').type('admin')
     cy.get('#login-button').click()
@@ -25,6 +25,22 @@ describe('Blog app', function () {
     cy.get('#login-button').click()
     cy.get('.error').should('contain', 'Wrong credentials')
     cy.get('.error').should('have.css', 'color', 'rgb(255, 0, 0)')
+  })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login()
+    })
+
+    it('A blog can be created', function() {
+      cy.contains('new Blog').click()
+      cy.get('#title').type('A very interesting blog')
+      cy.get('#author').type('Someone')
+      cy.get('#url').type('/wow')
+      cy.contains('create').click()
+      cy.get('.message').should('contain', 'a new blog A very interesting blog by Someone added')
+      cy.contains('A very interesting blog admin')
+    })
   })
 
 })

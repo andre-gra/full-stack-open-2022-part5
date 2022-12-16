@@ -11,6 +11,7 @@ const BlogForm = ({ handleSubmit, setTitle, setAuthor, setUrl, author, title, ur
             name="Username"
             onChange={({ target }) => setTitle(target.value)}
             placeholder='write title here'
+            id="title"
           />
         </div>
         <div>
@@ -21,6 +22,7 @@ const BlogForm = ({ handleSubmit, setTitle, setAuthor, setUrl, author, title, ur
             name="Password"
             onChange={({ target }) => setAuthor(target.value)}
             placeholder='write author here'
+            id="author"
           />
         </div>
         <div>
@@ -31,6 +33,7 @@ const BlogForm = ({ handleSubmit, setTitle, setAuthor, setUrl, author, title, ur
             name="text"
             onChange={({ target }) => setUrl(target.value)}
             placeholder='write url here'
+            id="url"
           />
         </div>
         <button type="submit" data-testid="create-button">create</button>
