@@ -41,6 +41,20 @@ describe('Blog app', function () {
       cy.get('.message').should('contain', 'a new blog A very interesting blog by Someone added')
       cy.contains('A very interesting blog admin')
     })
+
+    it('A blog can be liked', function() {
+      cy.contains('new Blog').click()
+      cy.get('#title').type('A very interesting blog that like me')
+      cy.get('#author').type('Other')
+      cy.get('#url').type('/liked')
+      cy.contains('create').click()
+      cy.get('.message').should('contain', 'a new blog A very interesting blog that like me by Other added')
+      cy.contains('A very interesting blog that like me admin')
+      cy.contains('view').click()
+      cy.get('#like-button').click()
+      cy.get('#like-container').should('contain', '1')
+    })
+
   })
 
 })

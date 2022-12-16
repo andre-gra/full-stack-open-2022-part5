@@ -38,7 +38,7 @@ const Blog = ({ blog, addLike }) => {
       <button onClick={toggleVisibility}>{buttonVisibilityText}</button>
       <div style={show} data-testid='toggableContent'>
         <div>{blog.url}</div>
-        <div>likes: {blog.likes} <button onClick={addLike} data-testid="like-button">like</button></div>
+        <div id="like-container">likes: {blog.likes} <button onClick={addLike} data-testid="like-button" id="like-button">like</button></div>
         <div>{blog.user.username}</div>
         {(loggedBlogappUser.username === blog.user.username) &&
         <button onClick={deleteBlog}>Remove</button>
