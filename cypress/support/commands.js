@@ -36,3 +36,9 @@ Cypress.Commands.add('login', () => {
   cy.get('#password').type('admin')
   cy.get('#login-button').click()
 })
+
+Cypress.Commands.add('login2', () => {
+  cy.get('#username').type('admin2')
+  cy.get('#password').type('admin2')
+  cy.get('#login-button').click()
+})

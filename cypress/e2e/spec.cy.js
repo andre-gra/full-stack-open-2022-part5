@@ -2,6 +2,7 @@ describe('Blog app', function () {
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3001/api/testing/reset')
     cy.createUser({ username: 'admin', password: 'admin', name: 'admin' })
+    cy.createUser({ username: 'admin2', password: 'admin2', name: 'admin2' })
     cy.visit('http://localhost:3000')
   })
 
@@ -27,7 +28,7 @@ describe('Blog app', function () {
     cy.get('.error').should('have.css', 'color', 'rgb(255, 0, 0)')
   })
 
-  describe('When logged in', function() {
+  describe('When logged1 logged in', function() {
     beforeEach(function() {
       cy.login()
     })
@@ -53,6 +54,44 @@ describe('Blog app', function () {
       cy.contains('view').click()
       cy.get('#like-button').click()
       cy.get('#like-container').should('contain', '1')
+    })
+
+    it('A blog can be deleted', function() {
+      cy.contains('new Blog').click()
+      cy.get('#title').type('A blog can be deleted when logged in')
+      cy.get('#author').type('logged')
+      cy.get('#url').type('/delete-me')
+      cy.contains('create').click()
+      cy.get('.message').should('contain', 'a new blog A blog can be deleted when logged in by logged added')
+      cy.contains('A blog can be deleted when logged in admin')
+      cy.contains('view').click()
+      cy.get('#delete-button').click()
+      cy.get('.blogs-container').should('not.contain','A blog can de deleted when logged in admin')
+    })
+
+  })
+
+  describe('When logged2 logged in', function() {
+    beforeEach(function() {
+      cy.login()
+    })
+
+    it('A blog can be deleted', function() {
+      cy.contains('new Blog').click()
+      cy.get('#title').type('A blog can be deleted when logged in')
+      cy.get('#author').type('logged')
+      cy.get('#url').type('/delete-me')
+      cy.contains('create').click()
+      cy.get('.message').should('contain', 'a new blog A blog can be deleted when logged in by logged added')
+      cy.contains('A blog can be deleted when logged in admin')
+      cy.get('#logout-button').click()
+      cy.login2()
+      cy.get('.blogs-container').should('not.contain','A blog can de deleted when logged in admin')
+      cy.get('#logout-button').click()
+      cy.login()
+      cy.contains('view').click()
+      cy.get('#delete-button').click()
+      cy.get('.blogs-container').should('not.contain','A blog can de deleted when logged in admin')
     })
 
   })

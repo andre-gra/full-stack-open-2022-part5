@@ -89,6 +89,19 @@ const App = () => {
     )
   }
 
+  const deleteBlog = async (blog) => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      try {
+        await blogService.deleteBlog(blog.id)
+      } catch (error) {
+        console.log(error)
+      }
+      blogService.getAll().then(blogs =>
+        setBlogs(blogs)
+      )
+    }
+  }
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
@@ -146,8 +159,8 @@ const App = () => {
       {user === null ?
         loginForm() :
         <div>
-          <p><span>{user.name} logged-in</span><button onClick={handleLogout}>logout</button></p>
-          <Toggable buttonLabel = 'new Blog'>
+          <p><span>{user.name} logged-in</span><button onClick={handleLogout} id="logout-button">logout</button></p>
+          <Toggable buttonLabel='new Blog'>
             <BlogForm
               handleSubmit={handleSubmit}
               author={author}
@@ -158,9 +171,11 @@ const App = () => {
               setUrl={setUrl}
             />
           </Toggable>
-          {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-            <Blog key={blog.id} blog={blog} addLike={() => addLike(blog)} />
-          )}
+          <div className='blogs-container'>
+            {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+              <Blog key={blog.id} blog={blog} addLike={() => addLike(blog)} deleteBlog={() => deleteBlog(blog)} />
+            )}
+          </div>
         </div>
       }
 

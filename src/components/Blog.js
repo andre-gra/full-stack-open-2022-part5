@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 
-const Blog = ({ blog, addLike }) => {
+const Blog = ({ blog, addLike, deleteBlog }) => {
   const [hide, setHide] = useState(true)
   const show = { display: hide ? 'none' : '' }
 
@@ -19,18 +18,7 @@ const Blog = ({ blog, addLike }) => {
     marginBottom: 5,
   }
 
-  const deleteBlog = async () => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-      try {
-        await blogService.deleteBlog(blog.id)
-      } catch(error) {
-        console.log(error)
-      }
-    }
-  }
-
-  const loggedBlogappUser = ''
-  blog.loggedBlogappUser !== undefined ? blog.loggedBlogappUser.username : JSON.parse(localStorage.getItem('loggedBlogappUser'))
+  const loggedBlogappUser = JSON.parse(localStorage.getItem('loggedBlogappUser'))
 
   return (
     <div style={blogStyle} className='blog'>
@@ -41,7 +29,7 @@ const Blog = ({ blog, addLike }) => {
         <div id="like-container">likes: {blog.likes} <button onClick={addLike} data-testid="like-button" id="like-button">like</button></div>
         <div>{blog.user.username}</div>
         {(loggedBlogappUser.username === blog.user.username) &&
-        <button onClick={deleteBlog}>Remove</button>
+        <button onClick={deleteBlog} id="delete-button">Remove</button>
         }
       </div>
     </div>
