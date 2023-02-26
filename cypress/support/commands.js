@@ -26,10 +26,11 @@
 
 Cypress.Commands.add('createUser', ({ username, password, name }) => {
   cy.request('POST', 'http://localhost:3001/api/users', {
-    username, name, password
+    username,
+    name,
+    password
   })
 })
-
 
 Cypress.Commands.add('login', () => {
   cy.get('#username').type('admin')

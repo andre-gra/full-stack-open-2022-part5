@@ -15,22 +15,31 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
-    marginBottom: 5,
+    marginBottom: 5
   }
 
-  const loggedBlogappUser = JSON.parse(localStorage.getItem('loggedBlogappUser'))
+  const loggedBlogappUser = JSON.parse(
+    localStorage.getItem('loggedBlogappUser')
+  )
 
   return (
-    <div style={blogStyle} className='blog'>
+    <div style={blogStyle} className="blog">
       {blog.title} {blog.author}
       <button onClick={toggleVisibility}>{buttonVisibilityText}</button>
-      <div style={show} data-testid='toggableContent'>
+      <div style={show} data-testid="toggableContent">
         <div>{blog.url}</div>
-        <div id="like-container">likes: {blog.likes} <button onClick={addLike} data-testid="like-button" id="like-button">like</button></div>
+        <div id="like-container">
+          likes: {blog.likes}{' '}
+          <button onClick={addLike} data-testid="like-button" id="like-button">
+            like
+          </button>
+        </div>
         <div>{blog.user.username}</div>
-        {(loggedBlogappUser.username === blog.user.username) &&
-        <button onClick={deleteBlog} id="delete-button">Remove</button>
-        }
+        {loggedBlogappUser.username === blog.user.username && (
+          <button onClick={deleteBlog} id="delete-button">
+            Remove
+          </button>
+        )}
       </div>
     </div>
   )

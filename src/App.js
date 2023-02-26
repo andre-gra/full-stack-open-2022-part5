@@ -6,10 +6,17 @@ import Notification from './components/Notification'
 import ErrorNotification from './components/ErrorNotification'
 import Toggable from './components/Toggable'
 import Blog from './components/Blog'
+import { setMessage, resetMessage } from './reducers/notificationReducer'
+import {
+  setErrorMessage,
+  resetErrorMessage
+} from './reducers/errorNotificationReducer'
+import { useSelector, useDispatch } from 'react-redux'
 
 const App = () => {
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [message, setMessage] = useState(null)
+  const dispatch = useDispatch()
+  const notifications = useSelector((state) => state.notifications)
+  const errorNotifications = useSelector((state) => state.errorNotifications)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -31,25 +38,22 @@ const App = () => {
 
     try {
       const user = await loginService.login({
-        username, password,
+        username,
+        password
       })
-      window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)
-      )
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       blogService.setToken(user.token)
-      setMessage(
-        `${username} logged succesfully`
-      )
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+      dispatch(setMessage(`${username} logged succesfully`)),
+        setTimeout(() => {
+          dispatch(resetMessage())
+        }, 5000)
       setUser(user)
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      dispatch(setErrorMessage('Wrong credentials'))
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(resetErrorMessage())
       }, 5000)
     }
   }
@@ -68,25 +72,21 @@ const App = () => {
     }
     try {
       await blogService.create(newObject)
-      setMessage(
-        `a new blog ${title} by ${author} added`
-      )
+      dispatch(setMessage(`a new blog ${title} by ${author} added`))
       setTimeout(() => {
-        setMessage(null)
+        dispatch(resetMessage())
       }, 5000)
     } catch (error) {
       console.log(error)
-      setErrorMessage('Something went wrong. Retry!')
+      dispatch(setErrorMessage('Something went wrong. Retry!'))
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(resetErrorMessage())
       }, 5000)
     }
     setTitle('')
     setAuthor('')
     setUrl('')
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    blogService.getAll().then((blogs) => setBlogs(blogs))
   }
 
   const deleteBlog = async (blog) => {
@@ -96,16 +96,12 @@ const App = () => {
       } catch (error) {
         console.log(error)
       }
-      blogService.getAll().then(blogs =>
-        setBlogs(blogs)
-      )
+      blogService.getAll().then((blogs) => setBlogs(blogs))
     }
   }
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    blogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
 
   const addLike = async (blog) => {
@@ -118,9 +114,7 @@ const App = () => {
     } catch (error) {
       console.log(error)
     }
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    blogService.getAll().then((blogs) => setBlogs(blogs))
   }
 
   const loginForm = () => (
@@ -145,7 +139,9 @@ const App = () => {
           id="password"
         />
       </div>
-      <button type="submit" id="login-button">login</button>
+      <button type="submit" id="login-button">
+        login
+      </button>
     </form>
   )
 
@@ -153,14 +149,20 @@ const App = () => {
     <div>
       <h2>blogs</h2>
 
-      <Notification message={message} />
-      <ErrorNotification error={errorMessage} />
+      <Notification message={notifications} />
+      <ErrorNotification error={errorNotifications} />
 
-      {user === null ?
-        loginForm() :
+      {user === null ? (
+        loginForm()
+      ) : (
         <div>
-          <p><span>{user.name} logged-in</span><button onClick={handleLogout} id="logout-button">logout</button></p>
-          <Toggable buttonLabel='new Blog'>
+          <p>
+            <span>{user.name} logged-in</span>
+            <button onClick={handleLogout} id="logout-button">
+              logout
+            </button>
+          </p>
+          <Toggable buttonLabel="new Blog">
             <BlogForm
               handleSubmit={handleSubmit}
               author={author}
@@ -171,14 +173,20 @@ const App = () => {
               setUrl={setUrl}
             />
           </Toggable>
-          <div className='blogs-container'>
-            {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-              <Blog key={blog.id} blog={blog} addLike={() => addLike(blog)} deleteBlog={() => deleteBlog(blog)} />
-            )}
+          <div className="blogs-container">
+            {blogs
+              .sort((a, b) => b.likes - a.likes)
+              .map((blog) => (
+                <Blog
+                  key={blog.id}
+                  blog={blog}
+                  addLike={() => addLike(blog)}
+                  deleteBlog={() => deleteBlog(blog)}
+                />
+              ))}
           </div>
         </div>
-      }
-
+      )}
     </div>
   )
 }

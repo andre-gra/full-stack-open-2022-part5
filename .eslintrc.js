@@ -22,10 +22,6 @@ module.exports = {
       "react", "jest", "cypress", "prettier"
   ],
   "rules": {
-      "indent": [
-          "error",
-          2  
-      ],
       "linebreak-style": [
           "error",
           "unix"

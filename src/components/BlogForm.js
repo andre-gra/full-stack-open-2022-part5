@@ -1,4 +1,12 @@
-const BlogForm = ({ handleSubmit, setTitle, setAuthor, setUrl, author, title, url }) => {
+const BlogForm = ({
+  handleSubmit,
+  setTitle,
+  setAuthor,
+  setUrl,
+  author,
+  title,
+  url
+}) => {
   return (
     <>
       <h2>Create new</h2>
@@ -10,7 +18,7 @@ const BlogForm = ({ handleSubmit, setTitle, setAuthor, setUrl, author, title, ur
             value={title}
             name="Username"
             onChange={({ target }) => setTitle(target.value)}
-            placeholder='write title here'
+            placeholder="write title here"
             id="title"
           />
         </div>
@@ -21,7 +29,7 @@ const BlogForm = ({ handleSubmit, setTitle, setAuthor, setUrl, author, title, ur
             value={author}
             name="Password"
             onChange={({ target }) => setAuthor(target.value)}
-            placeholder='write author here'
+            placeholder="write author here"
             id="author"
           />
         </div>
@@ -32,11 +40,13 @@ const BlogForm = ({ handleSubmit, setTitle, setAuthor, setUrl, author, title, ur
             value={url}
             name="text"
             onChange={({ target }) => setUrl(target.value)}
-            placeholder='write url here'
+            placeholder="write url here"
             id="url"
           />
         </div>
-        <button type="submit" data-testid="create-button">create</button>
+        <button type="submit" data-testid="create-button">
+          create
+        </button>
       </form>
     </>
   )

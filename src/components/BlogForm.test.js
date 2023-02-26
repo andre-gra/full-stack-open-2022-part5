@@ -5,7 +5,6 @@ import userEvent from '@testing-library/user-event'
 import BlogForm from './BlogForm'
 
 describe('<BlogForm />', () => {
-
   const blog = {
     title: 'Component testing is done with react-testing-library',
     author: 'Someone',
@@ -20,7 +19,6 @@ describe('<BlogForm />', () => {
   }
 
   test('after clicking the like button, event handler is called twice', async () => {
-
     const mockHandler = jest.fn()
 
     render(
@@ -28,7 +26,8 @@ describe('<BlogForm />', () => {
         author={blog.author}
         title={blog.title}
         url={blog.url}
-        handleSubmit={mockHandler} />
+        handleSubmit={mockHandler}
+      />
     )
 
     const user = userEvent.setup()
@@ -41,5 +40,4 @@ describe('<BlogForm />', () => {
 
     expect(mockHandler.mock.calls.length).toBe(1)
   })
-
 })

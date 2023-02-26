@@ -1,13 +1,9 @@
 const ErrorNotification = ({ error }) => {
-  if (error === null) {
+  if (error.length === 0) {
     return null
   }
 
-  return (
-    <div className='error'>
-      {error}
-    </div>
-  )
+  return <div className="error">{error}</div>
 }
 
 export default ErrorNotification

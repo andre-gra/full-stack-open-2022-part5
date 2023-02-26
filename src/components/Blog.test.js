@@ -5,7 +5,6 @@ import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
 
 describe('<Blog />', () => {
-
   const blog = {
     title: 'Component testing is done with react-testing-library',
     author: 'Someone',
@@ -20,12 +19,12 @@ describe('<Blog />', () => {
   }
 
   test('renders content', async () => {
+    render(<Blog blog={blog} />)
 
-    render(
-      <Blog blog={blog} />
+    const title = screen.getByText(
+      'Component testing is done with react-testing-library',
+      { exact: false }
     )
-
-    const title = screen.getByText('Component testing is done with react-testing-library', { exact: false })
     const author = screen.getByText('Someone', { exact: false })
     const divToggable = screen.getAllByTestId('toggableContent')
     expect(title).toBeDefined()
@@ -34,10 +33,7 @@ describe('<Blog />', () => {
   })
 
   test('after clicking show button, toggable are displayed', async () => {
-
-    render(
-      <Blog blog={blog} />
-    )
+    render(<Blog blog={blog} />)
 
     const user = userEvent.setup()
     const button = screen.getByText('view', { exact: false })
@@ -49,12 +45,9 @@ describe('<Blog />', () => {
   })
 
   test('after clicking the like button, event handler is called twice', async () => {
-
     const mockHandler = jest.fn()
 
-    render(
-      <Blog blog={blog} addLike={mockHandler} />
-    )
+    render(<Blog blog={blog} addLike={mockHandler} />)
 
     const user = userEvent.setup()
     const button = screen.getAllByTestId('like-button')
@@ -63,5 +56,4 @@ describe('<Blog />', () => {
 
     expect(mockHandler.mock.calls.length).toBe(2)
   })
-
 })
