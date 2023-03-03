@@ -6,10 +6,12 @@ import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 import notificationReducer from './reducers/notificationReducer'
 import errorNotificationReducer from './reducers/errorNotificationReducer'
+import blogReducer from './reducers/blogReducer'
 
 const reducer = combineReducers({
   notifications: notificationReducer,
-  errorNotifications: errorNotificationReducer
+  errorNotifications: errorNotificationReducer,
+  blogs: blogReducer
 })
 
 const store = createStore(reducer)

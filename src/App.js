@@ -12,18 +12,24 @@ import {
   resetErrorMessage
 } from './reducers/errorNotificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
+import blogsService from './services/blogs'
+import { setBlogs, createBlog } from './reducers/blogReducer'
 
 const App = () => {
   const dispatch = useDispatch()
   const notifications = useSelector((state) => state.notifications)
   const errorNotifications = useSelector((state) => state.errorNotifications)
+  const blogs = useSelector((state) => state.blogs)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  const [blogs, setBlogs] = useState([])
+
+  useEffect(() => {
+    blogsService.getAll().then((blogs) => dispatch(setBlogs(blogs)))
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -71,7 +77,8 @@ const App = () => {
       url: url
     }
     try {
-      await blogService.create(newObject)
+      const newBlog = await blogService.create(newObject)
+      dispatch(createBlog(newBlog))
       dispatch(setMessage(`a new blog ${title} by ${author} added`))
       setTimeout(() => {
         dispatch(resetMessage())
@@ -86,7 +93,7 @@ const App = () => {
     setTitle('')
     setAuthor('')
     setUrl('')
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    blogsService.getAll().then((blogs) => dispatch(setBlogs(blogs)))
   }
 
   const deleteBlog = async (blog) => {
@@ -99,10 +106,6 @@ const App = () => {
       blogService.getAll().then((blogs) => setBlogs(blogs))
     }
   }
-
-  useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [])
 
   const addLike = async (blog) => {
     const newObject = {
@@ -174,7 +177,7 @@ const App = () => {
             />
           </Toggable>
           <div className="blogs-container">
-            {blogs
+            {[...blogs]
               .sort((a, b) => b.likes - a.likes)
               .map((blog) => (
                 <Blog
