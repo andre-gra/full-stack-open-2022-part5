@@ -13,7 +13,12 @@ import {
 } from './reducers/errorNotificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
 import blogsService from './services/blogs'
-import { setBlogs, createBlog } from './reducers/blogReducer'
+import {
+  setBlogs,
+  createBlog,
+  addLike,
+  deleteBlog
+} from './reducers/blogReducer'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -93,21 +98,21 @@ const App = () => {
     setTitle('')
     setAuthor('')
     setUrl('')
-    blogsService.getAll().then((blogs) => dispatch(setBlogs(blogs)))
+    // blogsService.getAll().then((blogs) => dispatch(setBlogs(blogs)))
   }
 
-  const deleteBlog = async (blog) => {
+  const deleteBlogFunc = async (blog) => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
       try {
         await blogService.deleteBlog(blog.id)
       } catch (error) {
         console.log(error)
       }
-      blogService.getAll().then((blogs) => setBlogs(blogs))
+      dispatch(deleteBlog(blog.id))
     }
   }
 
-  const addLike = async (blog) => {
+  const addLikeFunc = async (blog) => {
     const newObject = {
       ...blog,
       likes: blog.likes + 1
@@ -117,7 +122,7 @@ const App = () => {
     } catch (error) {
       console.log(error)
     }
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    dispatch(addLike(blog.id))
   }
 
   const loginForm = () => (
@@ -183,8 +188,8 @@ const App = () => {
                 <Blog
                   key={blog.id}
                   blog={blog}
-                  addLike={() => addLike(blog)}
-                  deleteBlog={() => deleteBlog(blog)}
+                  addLike={() => addLikeFunc(blog)}
+                  deleteBlog={() => deleteBlogFunc(blog)}
                 />
               ))}
           </div>
