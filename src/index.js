@@ -7,11 +7,13 @@ import { Provider } from 'react-redux'
 import notificationReducer from './reducers/notificationReducer'
 import errorNotificationReducer from './reducers/errorNotificationReducer'
 import blogReducer from './reducers/blogReducer'
+import userReducer from './reducers/userReducer'
 
 const reducer = combineReducers({
   notifications: notificationReducer,
   errorNotifications: errorNotificationReducer,
-  blogs: blogReducer
+  blogs: blogReducer,
+  user: userReducer
 })
 
 const store = createStore(reducer)

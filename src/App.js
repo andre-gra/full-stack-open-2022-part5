@@ -19,15 +19,16 @@ import {
   addLike,
   deleteBlog
 } from './reducers/blogReducer'
+import { login, logout } from './reducers/userReducer'
 
 const App = () => {
   const dispatch = useDispatch()
   const notifications = useSelector((state) => state.notifications)
   const errorNotifications = useSelector((state) => state.errorNotifications)
   const blogs = useSelector((state) => state.blogs)
+  const user = useSelector((state) => state.user)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -40,7 +41,7 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch(login(user))
     }
   }, [])
 
@@ -58,7 +59,7 @@ const App = () => {
         setTimeout(() => {
           dispatch(resetMessage())
         }, 5000)
-      setUser(user)
+      dispatch(login(user))
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -71,7 +72,7 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
-    setUser(null)
+    dispatch(logout())
   }
 
   const handleSubmit = async (event) => {
