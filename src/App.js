@@ -20,6 +20,8 @@ import {
   deleteBlog
 } from './reducers/blogReducer'
 import { login, logout } from './reducers/userReducer'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Users from './components/Users'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -155,48 +157,53 @@ const App = () => {
   )
 
   return (
-    <div>
-      <h2>blogs</h2>
+    <Router>
+      <div>
+        <h2>blogs</h2>
 
-      <Notification message={notifications} />
-      <ErrorNotification error={errorNotifications} />
+        <Notification message={notifications} />
+        <ErrorNotification error={errorNotifications} />
 
-      {user === null ? (
-        loginForm()
-      ) : (
-        <div>
-          <p>
-            <span>{user.name} logged-in</span>
-            <button onClick={handleLogout} id="logout-button">
-              logout
-            </button>
-          </p>
-          <Toggable buttonLabel="new Blog">
-            <BlogForm
-              handleSubmit={handleSubmit}
-              author={author}
-              title={title}
-              url={url}
-              setAuthor={setAuthor}
-              setTitle={setTitle}
-              setUrl={setUrl}
-            />
-          </Toggable>
-          <div className="blogs-container">
-            {[...blogs]
-              .sort((a, b) => b.likes - a.likes)
-              .map((blog) => (
-                <Blog
-                  key={blog.id}
-                  blog={blog}
-                  addLike={() => addLikeFunc(blog)}
-                  deleteBlog={() => deleteBlogFunc(blog)}
-                />
-              ))}
+        {user === null ? (
+          loginForm()
+        ) : (
+          <div>
+            <p>
+              <span>{user.name} logged-in</span>
+              <button onClick={handleLogout} id="logout-button">
+                logout
+              </button>
+            </p>
+            <Toggable buttonLabel="new Blog">
+              <BlogForm
+                handleSubmit={handleSubmit}
+                author={author}
+                title={title}
+                url={url}
+                setAuthor={setAuthor}
+                setTitle={setTitle}
+                setUrl={setUrl}
+              />
+            </Toggable>
+            <div className="blogs-container">
+              {[...blogs]
+                .sort((a, b) => b.likes - a.likes)
+                .map((blog) => (
+                  <Blog
+                    key={blog.id}
+                    blog={blog}
+                    addLike={() => addLikeFunc(blog)}
+                    deleteBlog={() => deleteBlogFunc(blog)}
+                  />
+                ))}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+        <Routes>
+          <Route path="/users" element={<Users />} />
+        </Routes>
+      </div>
+    </Router>
   )
 }
 
