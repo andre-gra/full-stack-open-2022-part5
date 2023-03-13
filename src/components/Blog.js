@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from 'react'
 
 const Blog = ({ blog, addLike, deleteBlog }) => {
@@ -6,9 +7,9 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
 
   const buttonVisibilityText = hide ? 'view' : 'hide'
 
-  const toggleVisibility = () => {
-    setHide(!hide)
-  }
+  // const toggleVisibility = () => {
+  //   setHide(!hide)
+  // }
 
   const blogStyle = {
     paddingTop: 10,
@@ -25,7 +26,7 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
   return (
     <div style={blogStyle} className="blog">
       {blog.title} {blog.author}
-      <button onClick={toggleVisibility}>{buttonVisibilityText}</button>
+      {/* <button>{buttonVisibilityText}</button> */}
       <div style={show} data-testid="toggableContent">
         <div>{blog.url}</div>
         <div id="like-container">

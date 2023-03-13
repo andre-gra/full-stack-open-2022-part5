@@ -20,7 +20,11 @@ const Users = ({ users }) => {
             users.map((user) => {
               return (
                 <tr key={user.id}>
-                  <th role="button" onClick={() => handleClick(user.id)}>
+                  <th
+                    style={{ textDecoration: 'underline', cursor: 'pointer' }}
+                    role="button"
+                    onClick={() => handleClick(user.id)}
+                  >
                     {user.name}
                   </th>
                   <th>{user.blogs.length}</th>

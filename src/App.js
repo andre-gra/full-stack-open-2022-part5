@@ -25,6 +25,7 @@ import Users from './components/Users'
 import User from './components/User'
 import { useMatch } from 'react-router-dom'
 import usersService from './services/users'
+import BlogView from './components/BlogView'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -55,9 +56,14 @@ const App = () => {
     }
   }, [])
 
-  const match = useMatch('/users/:id')
-  const userDetail = match
-    ? users.find((user) => user.id === match.params.id)
+  const matchUser = useMatch('/users/:id')
+  const userDetail = matchUser
+    ? users.find((user) => user.id === matchUser.params.id)
+    : null
+
+  const matchBlog = useMatch('/blogs/:id')
+  const blogDetail = matchBlog
+    ? blogs.find((blog) => blog.id === matchBlog.params.id)
     : null
 
   const handleLogin = async (event) => {
@@ -216,6 +222,17 @@ const App = () => {
         <Route
           path="users/:id"
           element={userDetail ? <User user={userDetail} /> : null}
+        ></Route>
+        <Route
+          path="blogs/:id"
+          element={
+            blogDetail ? (
+              <BlogView
+                blog={blogDetail}
+                addLike={() => addLikeFunc(blogDetail)}
+              />
+            ) : null
+          }
         ></Route>
       </Routes>
     </div>
