@@ -20,8 +20,11 @@ import {
   deleteBlog
 } from './reducers/blogReducer'
 import { login, logout } from './reducers/userReducer'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import Users from './components/Users'
+import User from './components/User'
+import { useMatch } from 'react-router-dom'
+import usersService from './services/users'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -34,6 +37,11 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [users, setUsers] = useState()
+
+  useEffect(() => {
+    usersService.getAll().then((users) => setUsers(users))
+  }, [])
 
   useEffect(() => {
     blogsService.getAll().then((blogs) => dispatch(setBlogs(blogs)))
@@ -46,6 +54,11 @@ const App = () => {
       dispatch(login(user))
     }
   }, [])
+
+  const match = useMatch('/users/:id')
+  const userDetail = match
+    ? users.find((user) => user.id === match.params.id)
+    : null
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -157,53 +170,55 @@ const App = () => {
   )
 
   return (
-    <Router>
-      <div>
-        <h2>blogs</h2>
+    <div>
+      <h2>blogs</h2>
 
-        <Notification message={notifications} />
-        <ErrorNotification error={errorNotifications} />
+      <Notification message={notifications} />
+      <ErrorNotification error={errorNotifications} />
 
-        {user === null ? (
-          loginForm()
-        ) : (
-          <div>
-            <p>
-              <span>{user.name} logged-in</span>
-              <button onClick={handleLogout} id="logout-button">
-                logout
-              </button>
-            </p>
-            <Toggable buttonLabel="new Blog">
-              <BlogForm
-                handleSubmit={handleSubmit}
-                author={author}
-                title={title}
-                url={url}
-                setAuthor={setAuthor}
-                setTitle={setTitle}
-                setUrl={setUrl}
-              />
-            </Toggable>
-            <div className="blogs-container">
-              {[...blogs]
-                .sort((a, b) => b.likes - a.likes)
-                .map((blog) => (
-                  <Blog
-                    key={blog.id}
-                    blog={blog}
-                    addLike={() => addLikeFunc(blog)}
-                    deleteBlog={() => deleteBlogFunc(blog)}
-                  />
-                ))}
-            </div>
+      {user === null ? (
+        loginForm()
+      ) : (
+        <div>
+          <p>
+            <span>{user.name} logged-in</span>
+            <button onClick={handleLogout} id="logout-button">
+              logout
+            </button>
+          </p>
+          <Toggable buttonLabel="new Blog">
+            <BlogForm
+              handleSubmit={handleSubmit}
+              author={author}
+              title={title}
+              url={url}
+              setAuthor={setAuthor}
+              setTitle={setTitle}
+              setUrl={setUrl}
+            />
+          </Toggable>
+          <div className="blogs-container">
+            {[...blogs]
+              .sort((a, b) => b.likes - a.likes)
+              .map((blog) => (
+                <Blog
+                  key={blog.id}
+                  blog={blog}
+                  addLike={() => addLikeFunc(blog)}
+                  deleteBlog={() => deleteBlogFunc(blog)}
+                />
+              ))}
           </div>
-        )}
-        <Routes>
-          <Route path="/users" element={<Users />} />
-        </Routes>
-      </div>
-    </Router>
+        </div>
+      )}
+      <Routes>
+        <Route path="/users" element={users ? <Users users={users} /> : null} />
+        <Route
+          path="users/:id"
+          element={userDetail ? <User user={userDetail} /> : null}
+        ></Route>
+      </Routes>
+    </div>
   )
 }
 

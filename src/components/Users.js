@@ -1,34 +1,34 @@
-import usersService from '../services/users'
-import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const Users = () => {
-  const [users, setUsers] = useState()
+const Users = ({ users }) => {
+  const navigate = useNavigate()
 
-  useEffect(() => {
-    usersService.getAll().then((users) => setUsers(users))
-  }, [])
+  const handleClick = (id) => {
+    navigate(`${id}`)
+  }
 
   return (
     <>
       <h2>Users</h2>
-      <p>
-        <table>
+      <table>
+        <tbody>
           <tr>
             <th>Name</th>
             <th>Blogs created</th>
           </tr>
-          {users.map((user) => {
-            return (
-              <>
-                <tr>
-                  <th>{user.name}</th>
+          {users &&
+            users.map((user) => {
+              return (
+                <tr key={user.id}>
+                  <th role="button" onClick={() => handleClick(user.id)}>
+                    {user.name}
+                  </th>
                   <th>{user.blogs.length}</th>
                 </tr>
-              </>
-            )
-          })}
-        </table>
-      </p>
+              )
+            })}
+        </tbody>
+      </table>
 
       {console.log(users)}
     </>
