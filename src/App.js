@@ -20,7 +20,7 @@ import {
   deleteBlog
 } from './reducers/blogReducer'
 import { login, logout } from './reducers/userReducer'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router-dom'
 import Users from './components/Users'
 import User from './components/User'
 import { useMatch } from 'react-router-dom'
@@ -175,67 +175,86 @@ const App = () => {
     </form>
   )
 
+  const padding = {
+    padding: 5
+  }
+
   return (
-    <div>
-      <h2>blogs</h2>
-
-      <Notification message={notifications} />
-      <ErrorNotification error={errorNotifications} />
-
-      {user === null ? (
-        loginForm()
-      ) : (
-        <div>
+    <>
+      <div style={{ backgroundColor: 'aquamarine' }}>
+        <Link style={padding} to="/">
+          blogs
+        </Link>
+        <Link style={padding} to="/users">
+          users
+        </Link>
+        {user === null ? (
+          loginForm()
+        ) : (
           <p>
             <span>{user.name} logged-in</span>
             <button onClick={handleLogout} id="logout-button">
               logout
             </button>
           </p>
-          <Toggable buttonLabel="new Blog">
-            <BlogForm
-              handleSubmit={handleSubmit}
-              author={author}
-              title={title}
-              url={url}
-              setAuthor={setAuthor}
-              setTitle={setTitle}
-              setUrl={setUrl}
-            />
-          </Toggable>
-          <div className="blogs-container">
-            {[...blogs]
-              .sort((a, b) => b.likes - a.likes)
-              .map((blog) => (
-                <Blog
-                  key={blog.id}
-                  blog={blog}
-                  addLike={() => addLikeFunc(blog)}
-                  deleteBlog={() => deleteBlogFunc(blog)}
-                />
-              ))}
-          </div>
-        </div>
-      )}
-      <Routes>
-        <Route path="/users" element={users ? <Users users={users} /> : null} />
-        <Route
-          path="users/:id"
-          element={userDetail ? <User user={userDetail} /> : null}
-        ></Route>
-        <Route
-          path="blogs/:id"
-          element={
-            blogDetail ? (
-              <BlogView
-                blog={blogDetail}
-                addLike={() => addLikeFunc(blogDetail)}
+        )}
+      </div>
+      <div>
+        <h2>blogs</h2>
+
+        <Notification message={notifications} />
+        <ErrorNotification error={errorNotifications} />
+
+        {user === null ? null : (
+          <div>
+            <Toggable buttonLabel="new Blog">
+              <BlogForm
+                handleSubmit={handleSubmit}
+                author={author}
+                title={title}
+                url={url}
+                setAuthor={setAuthor}
+                setTitle={setTitle}
+                setUrl={setUrl}
               />
-            ) : null
-          }
-        ></Route>
-      </Routes>
-    </div>
+            </Toggable>
+            <div className="blogs-container">
+              {[...blogs]
+                .sort((a, b) => b.likes - a.likes)
+                .map((blog) => (
+                  <Blog
+                    key={blog.id}
+                    blog={blog}
+                    addLike={() => addLikeFunc(blog)}
+                    deleteBlog={() => deleteBlogFunc(blog)}
+                  />
+                ))}
+            </div>
+          </div>
+        )}
+        <Routes>
+          <Route
+            path="/users"
+            element={users ? <Users users={users} /> : null}
+          />
+          <Route
+            path="users/:id"
+            element={userDetail ? <User user={userDetail} /> : null}
+          ></Route>
+          <Route
+            path="blogs/:id"
+            element={
+              blogDetail ? (
+                <BlogView
+                  blog={blogDetail}
+                  addLike={() => addLikeFunc(blogDetail)}
+                />
+              ) : null
+            }
+          ></Route>
+        </Routes>
+      </div>
+    </>
   )
 }
 
