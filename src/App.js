@@ -5,7 +5,7 @@ import loginService from './services/login'
 import Notification from './components/Notification'
 import ErrorNotification from './components/ErrorNotification'
 import Toggable from './components/Toggable'
-import Blog from './components/Blog'
+// import Blog from './components/Blog'
 import { setMessage, resetMessage } from './reducers/notificationReducer'
 import {
   setErrorMessage,
@@ -218,7 +218,7 @@ const App = () => {
                 setUrl={setUrl}
               />
             </Toggable>
-            <div className="blogs-container">
+            {/* <div className="blogs-container">
               {[...blogs]
                 .sort((a, b) => b.likes - a.likes)
                 .map((blog) => (
@@ -229,7 +229,7 @@ const App = () => {
                     deleteBlog={() => deleteBlogFunc(blog)}
                   />
                 ))}
-            </div>
+            </div> */}
           </div>
         )}
         <Routes>
@@ -248,6 +248,7 @@ const App = () => {
                 <BlogView
                   blog={blogDetail}
                   addLike={() => addLikeFunc(blogDetail)}
+                  deleteBlog={() => deleteBlogFunc(blogDetail)}
                 />
               ) : null
             }

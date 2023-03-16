@@ -33,8 +33,6 @@ const Users = ({ users }) => {
             })}
         </tbody>
       </table>
-
-      {console.log(users)}
     </>
   )
 }
