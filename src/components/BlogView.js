@@ -1,9 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
+import blogService from '../services/blogs'
 
 const BlogView = ({ blog, addLike, deleteBlog }) => {
+  const [comment, setComment] = useState('')
+  const [commentList, setCommentList] = useState(blog.comments)
   const loggedBlogappUser = JSON.parse(
     localStorage.getItem('loggedBlogappUser')
   )
+
+  const submitComment = async (event) => {
+    event.preventDefault()
+    const commentObj = {
+      comment: comment
+    }
+    try {
+      const response = await blogService.addComment(blog.id, commentObj)
+      setCommentList(response.comments)
+    } catch (error) {
+      console.log(error)
+    }
+    setComment('')
+  }
 
   return (
     <>
@@ -18,11 +35,22 @@ const BlogView = ({ blog, addLike, deleteBlog }) => {
         </span>
         <span style={{ display: 'block' }}>added by {blog.author}</span>
       </div>
-      {blog.comments.length > 0 && (
+      <h2>Comments</h2>
+      <form onSubmit={submitComment}>
+        <input
+          type="text"
+          name="comment"
+          value={comment}
+          onChange={({ target }) => setComment(target.value)}
+          placeholder="write a comment here"
+          id="comment"
+        />
+        <button type="submit">add comment</button>
+      </form>
+      {commentList.length > 0 && (
         <>
-          <h2>Comments</h2>
           <ul>
-            {blog.comments.map((comment, index) => {
+            {commentList.map((comment, index) => {
               return <li key={index}>{comment}</li>
             })}
           </ul>

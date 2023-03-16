@@ -40,4 +40,9 @@ const deleteBlog = async (id) => {
   return response.data
 }
 
-export default { getAll, create, setToken, update, deleteBlog }
+const addComment = async (id, comment) => {
+  const response = await axios.put(`${baseUrl}/${id}/comments`, comment)
+  return response.data
+}
+
+export default { getAll, create, setToken, update, deleteBlog, addComment }
