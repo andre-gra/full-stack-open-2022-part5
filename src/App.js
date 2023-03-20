@@ -20,12 +20,12 @@ import {
   deleteBlog
 } from './reducers/blogReducer'
 import { login, logout } from './reducers/userReducer'
-import { Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route, Link, useLocation, useMatch } from 'react-router-dom'
 import Users from './components/Users'
 import User from './components/User'
-import { useMatch } from 'react-router-dom'
 import usersService from './services/users'
 import BlogView from './components/BlogView'
+import { createPortal } from 'react-dom'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -39,6 +39,7 @@ const App = () => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
   const [users, setUsers] = useState()
+  const location = useLocation()
 
   useEffect(() => {
     usersService.getAll().then((users) => setUsers(users))
@@ -148,31 +149,55 @@ const App = () => {
   }
 
   const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-          id="username"
-        />
-      </div>
-      <div>
-        password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-          id="password"
-        />
-      </div>
-      <button type="submit" id="login-button">
-        login
-      </button>
-    </form>
+    <>
+      <label htmlFor="my-modal" className="btn">
+        Login
+      </label>
+      {createPortal(
+        <>
+          <input type="checkbox" id="my-modal" className="modal-toggle" />
+          <div className="modal">
+            <div className="modal-box">
+              <form onSubmit={handleLogin} className="flex flex-col gap-4">
+                <div className="flex justify-evenly">
+                  username
+                  <input
+                    type="text"
+                    value={username}
+                    name="Username"
+                    onChange={({ target }) => setUsername(target.value)}
+                    id="username"
+                    className="input input-bordered input-primary w-full max-w-xs"
+                  />
+                </div>
+                <div className="flex justify-evenly">
+                  password
+                  <input
+                    type="password"
+                    value={password}
+                    name="Password"
+                    onChange={({ target }) => setPassword(target.value)}
+                    id="password"
+                    className="input input-bordered input-primary w-full max-w-xs"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  id="login-button"
+                  className="btn btn-outline btn-secondary"
+                >
+                  login
+                </button>
+              </form>
+              <label htmlFor="my-modal" className="btn btn-xs w-full mt-4">
+                Chiudi
+              </label>
+            </div>
+          </div>
+        </>,
+        document.body
+      )}
+    </>
   )
 
   const padding = {
@@ -181,33 +206,102 @@ const App = () => {
 
   return (
     <>
-      <div style={{ backgroundColor: 'aquamarine' }}>
-        <Link style={padding} to="/">
-          blogs
-        </Link>
-        <Link style={padding} to="/users">
-          users
-        </Link>
+      <div className="navbar bg-neutral justify-between">
+        <div className="navbar-start">
+          <div className="dropdown">
+            <label tabIndex={0} className="btn btn-ghost btn-circle">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16M4 18h7"
+                />
+              </svg>
+            </label>
+            <ul
+              tabIndex={0}
+              className="menu menu-compact dropdown-content bg-primary text-primary-content mt-3 p-2 shadow rounded-box w-52"
+            >
+              <li>
+                <Link
+                  className="btn btn-ghost normal-case text-xl"
+                  style={padding}
+                  to="/"
+                >
+                  blogs
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="btn btn-ghost normal-case text-xl"
+                  style={padding}
+                  to="/users"
+                >
+                  users
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+
         {user === null ? (
           loginForm()
         ) : (
-          <p>
+          <p className="justify-end w-full p-4">
             <span>{user.name} logged-in</span>
-            <button onClick={handleLogout} id="logout-button">
+            <button
+              className="btn btn-primary mx-4"
+              onClick={handleLogout}
+              id="logout-button"
+            >
               logout
             </button>
           </p>
         )}
       </div>
-      <div>
-        <h2>blogs</h2>
-
+      <div className="container mx-auto p-8">
+        <h2>
+          {location.pathname === '/'
+            ? 'HOME'
+            : location.pathname.split('/')[1].toUpperCase()}
+        </h2>
+        <div className="divider"></div>
         <Notification message={notifications} />
         <ErrorNotification error={errorNotifications} />
 
+        <Routes>
+          <Route
+            path="/users"
+            element={users ? <Users users={users} /> : null}
+          />
+          <Route
+            path="users/:id"
+            element={userDetail ? <User user={userDetail} /> : null}
+          ></Route>
+          <Route
+            path="blogs/:id"
+            element={
+              blogDetail ? (
+                <BlogView
+                  blog={blogDetail}
+                  addLike={() => addLikeFunc(blogDetail)}
+                  deleteBlog={() => deleteBlogFunc(blogDetail)}
+                />
+              ) : null
+            }
+          ></Route>
+        </Routes>
+        <div className="divider"></div>
         {user === null ? null : (
-          <div>
-            <Toggable buttonLabel="new Blog">
+          <div className="bg-neutral rounded-md p-8">
+            <Toggable buttonLabel="new Blog" className="btn btn-secondary">
               <BlogForm
                 handleSubmit={handleSubmit}
                 author={author}
@@ -232,28 +326,6 @@ const App = () => {
             </div> */}
           </div>
         )}
-        <Routes>
-          <Route
-            path="/users"
-            element={users ? <Users users={users} /> : null}
-          />
-          <Route
-            path="users/:id"
-            element={userDetail ? <User user={userDetail} /> : null}
-          ></Route>
-          <Route
-            path="blogs/:id"
-            element={
-              blogDetail ? (
-                <BlogView
-                  blog={blogDetail}
-                  addLike={() => addLikeFunc(blogDetail)}
-                  deleteBlog={() => deleteBlogFunc(blogDetail)}
-                />
-              ) : null
-            }
-          ></Route>
-        </Routes>
       </div>
     </>
   )

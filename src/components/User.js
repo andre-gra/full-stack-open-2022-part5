@@ -8,23 +8,22 @@ const User = ({ user }) => {
   }
 
   return (
-    <>
-      <h2>Added blogs</h2>
-      <ul>
-        {user.blogs.map((blog) => {
-          return (
-            <li
-              style={{ textDecoration: 'underline', cursor: 'pointer' }}
-              key={blog.id}
+    <div className="bg-neutral p-8 rounded-md flex flex-wrap">
+      <h2 className="text-secondary text-xl w-full text-center">Added blogs</h2>
+      {user.blogs.map((blog) => {
+        return (
+          <div className="card w-1/3 bg-base-100 shadow-xl m-4" key={blog.id}>
+            <div
+              className="card-body"
               role="button"
               onClick={() => handleClick(blog.id)}
             >
-              {blog.title}
-            </li>
-          )
-        })}
-      </ul>
-    </>
+              <h2 className="card-title">{blog.title}!</h2>
+            </div>
+          </div>
+        )
+      })}
+    </div>
   )
 }
 

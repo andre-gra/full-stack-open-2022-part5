@@ -8,9 +8,9 @@ const BlogForm = ({
   url
 }) => {
   return (
-    <>
-      <h2>Create new</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="flex flex-col gap-1">
+      <h2 className="w-full">Create new</h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <div>
           title:
           <input
@@ -20,6 +20,7 @@ const BlogForm = ({
             onChange={({ target }) => setTitle(target.value)}
             placeholder="write title here"
             id="title"
+            className="input input-bordered input-secondary w-full max-w-xs mx-2"
           />
         </div>
         <div>
@@ -31,6 +32,7 @@ const BlogForm = ({
             onChange={({ target }) => setAuthor(target.value)}
             placeholder="write author here"
             id="author"
+            className="input input-bordered input-secondary w-full max-w-xs mx-2"
           />
         </div>
         <div>
@@ -42,13 +44,18 @@ const BlogForm = ({
             onChange={({ target }) => setUrl(target.value)}
             placeholder="write url here"
             id="url"
+            className="input input-bordered input-secondary w-full max-w-xs mx-2"
           />
         </div>
-        <button type="submit" data-testid="create-button">
+        <button
+          type="submit"
+          data-testid="create-button"
+          className="btn btn-secondary btn-sm w-20"
+        >
           create
         </button>
       </form>
-    </>
+    </div>
   )
 }
 

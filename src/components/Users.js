@@ -8,14 +8,15 @@ const Users = ({ users }) => {
   }
 
   return (
-    <>
-      <h2>Users</h2>
-      <table>
-        <tbody>
+    <div className="overflow-x-auto">
+      <table className="table w-full">
+        <thead>
           <tr>
             <th>Name</th>
             <th>Blogs created</th>
           </tr>
+        </thead>
+        <tbody>
           {users &&
             users.map((user) => {
               return (
@@ -33,7 +34,7 @@ const Users = ({ users }) => {
             })}
         </tbody>
       </table>
-    </>
+    </div>
   )
 }
 

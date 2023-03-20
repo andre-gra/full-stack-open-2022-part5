@@ -23,45 +23,59 @@ const BlogView = ({ blog, addLike, deleteBlog }) => {
   }
 
   return (
-    <>
-      <h1>{blog.title}</h1>
-      <div>
-        <span style={{ display: 'block' }}>{blog.url}</span>
-        <span style={{ display: 'block' }}>
+    <div className="bg-secondary rounded-md p-8 text-secondary-content">
+      <div className="bg-neutral text-neutral-content p-8">
+        <h1 className="text-xl text-center">{blog.title}</h1>
+        <span className="block">{blog.url}</span>
+        <span className="block">
           {blog.likes} likes
-          <button onClick={addLike} data-testid="like-button" id="like-button">
+          <button
+            onClick={addLike}
+            data-testid="like-button"
+            id="like-button"
+            className="btn btn-secondary btn-xs mx-2"
+          >
             like
           </button>
         </span>
-        <span style={{ display: 'block' }}>added by {blog.author}</span>
+        <span className="text-xs">added by {blog.author}</span>
       </div>
-      <h2>Comments</h2>
-      <form onSubmit={submitComment}>
-        <input
-          type="text"
-          name="comment"
-          value={comment}
-          onChange={({ target }) => setComment(target.value)}
-          placeholder="write a comment here"
-          id="comment"
-        />
-        <button type="submit">add comment</button>
-      </form>
-      {commentList.length > 0 && (
-        <>
-          <ul>
-            {commentList.map((comment, index) => {
-              return <li key={index}>{comment}</li>
-            })}
-          </ul>
-        </>
-      )}
-      {loggedBlogappUser.username === blog.user.username && (
-        <button onClick={deleteBlog} id="delete-button">
-          Remove
-        </button>
-      )}
-    </>
+      <div className="py-4">
+        <h2 className="text-lg">Comments</h2>
+        <form onSubmit={submitComment}>
+          <input
+            type="text"
+            name="comment"
+            value={comment}
+            onChange={({ target }) => setComment(target.value)}
+            placeholder="write a comment here"
+            id="comment"
+            className="input input-bordered input-info w-full max-w-xs text-secondary"
+          />
+          <button type="submit" className="btn mx-4">
+            add comment
+          </button>
+        </form>
+        {commentList.length > 0 && (
+          <>
+            <ul>
+              {commentList.map((comment, index) => {
+                return <li key={index}>{comment}</li>
+              })}
+            </ul>
+          </>
+        )}
+        {loggedBlogappUser.username === blog.user.username && (
+          <button
+            onClick={deleteBlog}
+            id="delete-button"
+            className="btn btn-error border-warning text-error-content"
+          >
+            Remove
+          </button>
+        )}
+      </div>
+    </div>
   )
 }
 
